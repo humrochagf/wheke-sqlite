@@ -1,3 +1,5 @@
+from collections.abc import Generator
+
 from sqlalchemy import Engine
 from sqlmodel import Session, SQLModel, create_engine
 from svcs import Container
@@ -21,10 +23,17 @@ class DatabaseService:
     def create_db(self) -> None:
         SQLModel.metadata.create_all(self.engine)
 
+    def dispose(self) -> None:
+        self.engine.dispose()
 
-def database_service_factory(container: Container) -> DatabaseService:
+
+def database_service_factory(container: Container) -> Generator[DatabaseService]:
     settings = get_settings(container, WhekeSettings).get_feature(DatabaseSettings)
-    return DatabaseService(database_settings=settings)
+    service = DatabaseService(database_settings=settings)
+
+    yield service
+
+    service.dispose()
 
 
 def get_database_service(container: Container) -> DatabaseService:
