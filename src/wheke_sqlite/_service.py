@@ -1,4 +1,5 @@
 from collections.abc import Generator
+from contextlib import contextmanager
 
 from sqlalchemy import Engine
 from sqlmodel import Session, SQLModel, create_engine
@@ -17,8 +18,10 @@ class DatabaseService:
         self.engine = create_engine(database_settings.connection_string)
 
     @property
-    def session(self) -> Session:
-        return Session(self.engine)
+    @contextmanager
+    def session(self) -> Generator[Session]:
+        with Session(self.engine) as _session:
+            yield _session
 
     def create_db(self) -> None:
         SQLModel.metadata.create_all(self.engine)
@@ -27,13 +30,10 @@ class DatabaseService:
         self.engine.dispose()
 
 
-def database_service_factory(container: Container) -> Generator[DatabaseService]:
+def database_service_factory(container: Container) -> DatabaseService:
     settings = get_settings(container, WhekeSettings).get_feature(DatabaseSettings)
-    service = DatabaseService(database_settings=settings)
 
-    yield service
-
-    service.dispose()
+    return DatabaseService(database_settings=settings)
 
 
 def get_database_service(container: Container) -> DatabaseService:
