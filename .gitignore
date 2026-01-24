@@ -1,14 +1,18 @@
-# Python-generated files
-__pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
+*.egg
 *.egg-info
-
-# Virtual environments
-.venv
-
-# UV files
-uv.lock
+*.env
+*.py[oc]
+.DS_Store
+.coverage*
+.env
+.hatch/
+.mypy_cache/
+.pytest_cache/
 .python-version
+.ruff_cache/
+.venv/
+.vscode
+dist/
+site/
+uv.lock
+venv/
