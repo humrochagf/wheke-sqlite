@@ -3,7 +3,7 @@ from typing import ClassVar
 from wheke import FeatureSettings
 
 
-class DatabaseSettings(FeatureSettings):
-    __feature_name__: ClassVar[str] = "database"
+class SQLModelSettings(FeatureSettings):
+    __feature_name__: ClassVar[str] = "sqlmodel"
 
     connection_string: str = "sqlite:///database.db"

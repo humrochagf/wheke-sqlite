@@ -1,7 +1,7 @@
 [project]
-name = "wheke-sqlite"
+name = "wheke-sqlmodel"
 version = "0.2.0"
-description = "Add sqlite capabilities to wheke with sqlmodel"
+description = "Add sql capabilities to wheke with SQLModel"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -114,7 +114,7 @@ unfixable = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["wheke_sqlite"]
+known-first-party = ["wheke_sqlmodel"]
 
 [tool.ruff.lint.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports

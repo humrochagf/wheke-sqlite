@@ -1,14 +1,14 @@
 from wheke import Pod, ServiceConfig
 
 from ._cli import cli
-from ._service import DatabaseService, database_service_factory
+from ._service import SQLModelService, sqlmodel_service_factory
 
-database_pod = Pod(
-    "database",
+sqlmodel_pod = Pod(
+    "sqlmodel",
     services=[
         ServiceConfig(
-            DatabaseService,
-            database_service_factory,
+            SQLModelService,
+            sqlmodel_service_factory,
             is_singleton=True,
             singleton_cleanup_method="dispose",
         ),

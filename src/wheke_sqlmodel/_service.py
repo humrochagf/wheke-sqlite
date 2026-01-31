@@ -6,16 +6,14 @@ from sqlmodel import Session, SQLModel, create_engine
 from svcs import Container
 from wheke import WhekeSettings, get_service, get_settings
 
-from ._settings import DatabaseSettings
+from ._settings import SQLModelSettings
 
 
-class DatabaseService:
-    settings: DatabaseSettings
-
+class SQLModelService:
     engine: Engine
 
-    def __init__(self, *, database_settings: DatabaseSettings) -> None:
-        self.engine = create_engine(database_settings.connection_string)
+    def __init__(self, *, sqlmodel_settings: SQLModelSettings) -> None:
+        self.engine = create_engine(sqlmodel_settings.connection_string)
 
     @property
     @contextmanager
@@ -30,11 +28,11 @@ class DatabaseService:
         self.engine.dispose()
 
 
-def database_service_factory(container: Container) -> DatabaseService:
-    settings = get_settings(container, WhekeSettings).get_feature(DatabaseSettings)
+def sqlmodel_service_factory(container: Container) -> SQLModelService:
+    settings = get_settings(container, WhekeSettings).get_feature(SQLModelSettings)
 
-    return DatabaseService(database_settings=settings)
+    return SQLModelService(sqlmodel_settings=settings)
 
 
-def get_database_service(container: Container) -> DatabaseService:
-    return get_service(container, DatabaseService)
+def get_sqlmodel_service(container: Container) -> SQLModelService:
+    return get_service(container, SQLModelService)

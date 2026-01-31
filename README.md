@@ -1,3 +1,3 @@
-# Wheke Sqlite
+# Wheke SQLModel
 
-Add sqlite capabilities to wheke with sqlmodel
+Add sql capabilities to wheke with SQLModel
