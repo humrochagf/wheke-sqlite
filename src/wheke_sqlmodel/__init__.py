@@ -1,10 +1,10 @@
-from ._pod import database_pod
-from ._service import DatabaseService, get_database_service
-from ._settings import DatabaseSettings
+from ._pod import sqlmodel_pod
+from ._service import SQLModelService, get_sqlmodel_service
+from ._settings import SQLModelSettings
 
 __all__ = [
-    "DatabaseService",
-    "DatabaseSettings",
-    "database_pod",
-    "get_database_service",
+    "SQLModelService",
+    "SQLModelSettings",
+    "get_sqlmodel_service",
+    "sqlmodel_pod",
 ]

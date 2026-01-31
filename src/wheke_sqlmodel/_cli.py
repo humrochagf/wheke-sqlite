@@ -1,3 +1,4 @@
+import anyio
 import typer
 from rich.console import Console
 from typer import Context
@@ -16,4 +17,14 @@ def create_db(ctx: Context) -> None:
 
     console.print("Creating database...")
 
-    service.create_db()
+    anyio.run(service.create_db)
+
+
+@cli.command()
+def drop_db(ctx: Context) -> None:
+    container = get_container(ctx)
+    service = get_sqlmodel_service(container)
+
+    console.print("Droping database...")
+
+    anyio.run(service.create_db)

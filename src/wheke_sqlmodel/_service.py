@@ -1,8 +1,9 @@
-from collections.abc import Generator
-from contextlib import contextmanager
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 
-from sqlalchemy import Engine
-from sqlmodel import Session, SQLModel, create_engine
+from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
+from sqlmodel import SQLModel
+from sqlmodel.ext.asyncio.session import AsyncSession
 from svcs import Container
 from wheke import WhekeSettings, get_service, get_settings
 
@@ -10,22 +11,30 @@ from ._settings import SQLModelSettings
 
 
 class SQLModelService:
-    engine: Engine
+    engine: AsyncEngine
 
     def __init__(self, *, sqlmodel_settings: SQLModelSettings) -> None:
-        self.engine = create_engine(sqlmodel_settings.connection_string)
+        self.engine = create_async_engine(
+            sqlmodel_settings.connection_string,
+            echo=sqlmodel_settings.echo_operations,
+        )
 
     @property
-    @contextmanager
-    def session(self) -> Generator[Session]:
-        with Session(self.engine) as _session:
+    @asynccontextmanager
+    async def session(self) -> AsyncGenerator[AsyncSession]:
+        async with AsyncSession(self.engine) as _session:
             yield _session
 
-    def create_db(self) -> None:
-        SQLModel.metadata.create_all(self.engine)
+    async def create_db(self) -> None:
+        async with self.engine.begin() as conn:
+            await conn.run_sync(SQLModel.metadata.create_all)
 
-    def dispose(self) -> None:
-        self.engine.dispose()
+    async def drop_db(self) -> None:
+        async with self.engine.begin() as conn:
+            await conn.run_sync(SQLModel.metadata.drop_all)
+
+    async def dispose(self) -> None:
+        await self.engine.dispose()
 
 
 def sqlmodel_service_factory(container: Container) -> SQLModelService:
