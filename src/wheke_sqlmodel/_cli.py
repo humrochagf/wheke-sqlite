@@ -27,4 +27,4 @@ def drop_db(ctx: Context) -> None:
 
     console.print("Droping database...")
 
-    anyio.run(service.create_db)
+    anyio.run(service.drop_db)

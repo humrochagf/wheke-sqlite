@@ -13,10 +13,13 @@ from ._settings import SQLModelSettings
 class SQLModelService:
     engine: AsyncEngine
 
-    def __init__(self, *, sqlmodel_settings: SQLModelSettings) -> None:
+    def __init__(self, *, settings: SQLModelSettings) -> None:
         self.engine = create_async_engine(
-            sqlmodel_settings.connection_string,
-            echo=sqlmodel_settings.echo_operations,
+            settings.connection_string,
+            connect_args={
+                "check_same_thread": False,
+            },
+            echo=settings.echo_operations,
         )
 
     @property
@@ -40,7 +43,7 @@ class SQLModelService:
 def sqlmodel_service_factory(container: Container) -> SQLModelService:
     settings = get_settings(container, WhekeSettings).get_feature(SQLModelSettings)
 
-    return SQLModelService(sqlmodel_settings=settings)
+    return SQLModelService(settings=settings)
 
 
 def get_sqlmodel_service(container: Container) -> SQLModelService:

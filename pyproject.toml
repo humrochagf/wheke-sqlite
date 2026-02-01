@@ -5,17 +5,25 @@ description = "Add sql capabilities to wheke with SQLModel"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+  "aiosqlite",
+  "anyio",
   "sqlmodel",
   "wheke",
 ]
 
 [dependency-groups]
 dev = [
+  "httpx",
   "isort",
   "mypy",
   "pytest",
   "pytest-cov",
   "ruff",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "src"
 ]
 
 [tool.coverage.run]
